@@ -1,13 +1,16 @@
+
 var transferencia = null;
 var mercado_Pago  = null;
-window.onload = function() {
-    
+
+window.onload = function(){
+       
     $.ajax({
         type: "GET",
         url: "https://localhost:44310/api/Carrito/ProductosValorCarritoCliente?clienteID=" + localStorage.getItem("clienteID"),
 
         dataType: "json",
         success: function(data) {
+            console.log(data);
             if(data && data.productos.length >0)
             {
                 var precio = document.getElementById("precio");
@@ -91,17 +94,7 @@ window.onload = function() {
             console.log(error.message);
             alert('error');
         }
-
-
-
-
     });
-
-    
- 
-
-
-
 
 }
 
@@ -381,13 +374,13 @@ buscador.addEventListener('submit', function(e) {
 
 function llenarLocalStorage(publicacionID) {
     localStorage.setItem("publicacionID", parseInt(publicacionID));
-
 }
 
 function comprar() {
-    console.log(transferencia,mercado_Pago)
-    if (parseInt(localStorage.getItem("valorcarrito")) > 0 && (transferencia !== false || mercado_Pago !== false) ) {
-        if(transferencia !== false && transferencia !== null)
+    console.log(this.transferencia);
+    console.log(this.mercado_Pago);
+    if (parseInt(localStorage.getItem("valorcarrito")) > 0 && (this.transferencia !== false || this.mercado_Pago !== false) ) {
+        if(this.transferencia !== false && this.transferencia !== null)
         {
             $.ajax({
                 type: "POST",
@@ -395,12 +388,11 @@ function comprar() {
                 dataType: "json",
                 success: function(data) {
                     cancelar();
-                    alert("Compra exitosa")
-    
+                    alert("Compra exitosa");
                 }
             });
         }
-        else if (mercado_Pago !== false && mercado_Pago !== null)
+        else if (this.mercado_Pago !== false && this.mercado_Pago !== null)
         {
             let objeto = {
                 carroId: `${1}`,
@@ -411,7 +403,7 @@ function comprar() {
                 data: JSON.stringify(objeto),
                 url: "https://localhost:44321/api/venta/InsertarVenta?carritoID=" + localStorage.getItem("carritoID"),
                 dataType: "json",
-                success: function(result) {
+                success: async function(result) {
                     if (result.status === 201) {
                         window.location.href = await GetMercadoPago(result.data.saleId);
                     }
@@ -422,17 +414,13 @@ function comprar() {
      
 
     } else {
-
         alert("seleccione un metodo de pago");
-
     }
 
 }
 
 function iniciarSesion() {
-
     location.href = "/PantallasPrincipales/login.html";
-
 }
 
 
@@ -454,7 +442,7 @@ function Metodo(metodo,evento){
 }
 
 const GetMercadoPago = async (saleId,price) => {
-    $.ajax({
+        await $.ajax({
         type: "GET",
         url:`?Price=${price}&Description=MalditoHard&SaleId=${saleId}`,
         dataType: "json",
