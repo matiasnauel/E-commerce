@@ -567,6 +567,7 @@ var contenido = document.getElementById('contenido');
 
 function Cerrar() {
     firebase.auth().signOut().then(function() {
+        localStorage.clear();
         console.log("Finalizo sesion");
         location.href = "/PantallasPrincipales/PaginaPrincipal.html";
     }).catch(function(error) {

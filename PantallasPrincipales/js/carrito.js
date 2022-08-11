@@ -1,40 +1,37 @@
 
-var transferencia = null;
-var mercado_Pago  = null;
 
-window.onload = function(){
-       
+window.onload = function () {
+
     $.ajax({
         type: "GET",
         url: "https://localhost:44310/api/Carrito/ProductosValorCarritoCliente?clienteID=" + localStorage.getItem("clienteID"),
 
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
             console.log(data);
-            if(data && data.productos.length >0)
-            {
+            if (data && data.productos.length > 0) {
                 var precio = document.getElementById("precio");
                 precio.innerHTML = "TOTAL: " + "$" + data.valorcarrito;
                 localStorage.setItem("valorcarrito", data.valorcarrito);
-                $.each(data.productos, function(i, item) {
-    
+                $.each(data.productos, function (i, item) {
+
                     var tr = document.createElement('tr');
                     var td = document.createElement('td');
-    
+
                     var div = document.createElement('div');
                     div.className = "contenedor-imagen";
-    
+
                     var imagen = document.createElement('IMG');
-                    imagen.src = item.imagen.replace("http://localhost/PantallasPrincipales/images/","");
+                    imagen.src = item.imagen.replace("http://localhost/PantallasPrincipales/images/", "");
                     imagen.id = item.productoID;
-    
-    
-    
+
+
+
                     div.append(imagen);
                     td.append(div);
                     tr.append(td);
-    
-    
+
+
                     var td1 = document.createElement('td');
                     td1.className = "titulo";
                     td1.innerHTML = item.nombre;
@@ -50,47 +47,47 @@ window.onload = function(){
                     td3.textContent = item.cantidad + " " + texto;
                     var td4 = document.createElement('td');
                     td4.className = "centrar-boton";
-    
-    
+
+
                     var a = document.createElement('button');
                     a.className = "btn btn-danger centrar-boton";
                     a.textContent = "Borrar";
-    
-                    a.onclick = function() {
+
+                    a.onclick = function () {
                         $.ajax({
                             type: "GET",
                             url: "https://localhost:44310/api/Carrito/BorrarProductoCarrito?productoID=" + item.productoID + "&carritoID=" + localStorage.getItem("carritoID"),
                             dataType: "json",
-                            success: function(data) {
-    
+                            success: function (data) {
+
                                 var precio = document.getElementById("precio");
                                 precio.innerHTML = precio.innerHTML - item.precio;
                                 location.reload();
-    
+
                             }
-    
-    
+
+
                         });
                     }
-    
+
                     td4.append(a);
                     tr.append(td1);
                     tr.append(td2);
                     tr.append(td3);
                     tr.append(td4);
-    
-    
-    
+
+
+
                     $('#contenedor').append(tr);
-    
+
                 });
             }
-            else{
-                 window.location  = "/PantallasPrincipales/PaginaPrincipal.html"
+            else {
+                window.location = "/PantallasPrincipales/PaginaPrincipal.html"
             }
 
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error.message);
             alert('error');
         }
@@ -105,7 +102,7 @@ function cancelar() {
         type: "GET",
         url: "https://localhost:44310/api/Carrito/BorrarCarritoCompleto?carritoID=" + localStorage.getItem("carritoID"),
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
 
 
             location.reload();
@@ -163,14 +160,14 @@ function FiltrarDescripcion(descripcion) {
 
 
 
-        success: function(data) {
+        success: function (data) {
             var maestro2 = document.createElement('div');
             maestro2.className = "col-md-12";
             maestro2.id = "maestro";
             var divcontenedor = document.createElement('div');
             divcontenedor.className = "w3-row-padding";
             divcontenedor.id = "contenedor";
-            $.each(data, function(i, item) {
+            $.each(data, function (i, item) {
 
 
 
@@ -183,7 +180,7 @@ function FiltrarDescripcion(descripcion) {
 
 
                 var imagen = document.createElement('IMG');
-                imagen.src = item.imagen.replace("http://localhost/PantallasPrincipales/images/","");
+                imagen.src = item.imagen.replace("http://localhost/PantallasPrincipales/images/", "");
                 imagen.id = item.publicacionID;
                 imagen.style.width = "100%";
 
@@ -195,12 +192,12 @@ function FiltrarDescripcion(descripcion) {
                 boton.textContent = "Añadir Al Carrito";
                 boton.id = item.productoID;
 
-                boton.onclick = function() {
+                boton.onclick = function () {
                     $.ajax({
                         type: "POST",
                         url: "https://localhost:44310/api/CarritoProducto/InsertarCarritoProductoCliente?carritoID=" + localStorage.getItem("carritoID") + "&productoID=" + item.productoID,
                         dataType: "json",
-                        success: function(data) {
+                        success: function (data) {
 
                         }
 
@@ -214,7 +211,7 @@ function FiltrarDescripcion(descripcion) {
 
 
                 var a = document.createElement('a');
-                a.onclick = function() {
+                a.onclick = function () {
                     llenarLocalStorage(item.publicacionID);
                     location.href = "producto.html";
                 }
@@ -243,7 +240,7 @@ function FiltrarDescripcion(descripcion) {
     });
 }
 var buscador = document.getElementById('formulario');
-buscador.addEventListener('submit', function(e) {
+buscador.addEventListener('submit', function (e) {
     e.preventDefault();
 
 
@@ -291,27 +288,21 @@ buscador.addEventListener('submit', function(e) {
 
 
 
-        success: function(data) {
+        success: function (data) {
             var maestro2 = document.createElement('div');
             maestro2.className = "col-md-12";
             maestro2.id = "maestro";
             var divcontenedor = document.createElement('div');
             divcontenedor.className = "w3-row-padding";
             divcontenedor.id = "contenedor";
-            $.each(data, function(i, item) {
-
-
-
-
-
-
+            $.each(data, function (i, item) {
 
                 var div = document.createElement('div');
                 div.className = "w3-col s4  w3-hover-shadow  w3-margin-top containere";
 
 
                 var imagen = document.createElement('IMG');
-                imagen.src = item.imagen.replace("http://localhost/PantallasPrincipales/images/","");
+                imagen.src = item.imagen.replace("http://localhost/PantallasPrincipales/images/", "");
                 imagen.id = item.publicacionID;
                 imagen.style.width = "100%";
 
@@ -323,12 +314,12 @@ buscador.addEventListener('submit', function(e) {
                 boton.textContent = "Añadir Al Carrito";
                 boton.id = item.productoID;
 
-                boton.onclick = function() {
+                boton.onclick = function () {
                     $.ajax({
                         type: "POST",
                         url: "https://localhost:44310/api/CarritoProducto/InsertarCarritoProductoCliente?carritoID=" + localStorage.getItem("carritoID") + "&productoID=" + item.productoID,
                         dataType: "json",
-                        success: function(data) {
+                        success: function (data) {
 
                         }
 
@@ -342,7 +333,7 @@ buscador.addEventListener('submit', function(e) {
 
 
                 var a = document.createElement('a');
-                a.onclick = function() {
+                a.onclick = function () {
                     llenarLocalStorage(item.publicacionID);
                     location.href = "producto.html";
                 }
@@ -358,11 +349,6 @@ buscador.addEventListener('submit', function(e) {
                 divcontenedor.append(div);
                 $('#panel').append(maestro2);
                 maestro2.append(divcontenedor);
-
-
-
-
-
             });
         }
 
@@ -376,84 +362,49 @@ function llenarLocalStorage(publicacionID) {
     localStorage.setItem("publicacionID", parseInt(publicacionID));
 }
 
-function comprar() {
-    console.log(this.transferencia);
-    console.log(this.mercado_Pago);
-    if (parseInt(localStorage.getItem("valorcarrito")) > 0 && (this.transferencia !== false || this.mercado_Pago !== false) ) {
-        if(this.transferencia !== false && this.transferencia !== null)
-        {
-            $.ajax({
-                type: "POST",
-                url: "https://localhost:44321/api/venta/InsertarVenta?carritoID=" + localStorage.getItem("carritoID"),
-                dataType: "json",
-                success: function(data) {
-                    cancelar();
-                    alert("Compra exitosa");
-                }
-            });
-        }
-        else if (this.mercado_Pago !== false && this.mercado_Pago !== null)
-        {
-            let objeto = {
-                carroId: `${1}`,
-                total: `${100}`
-            }
-            $.ajax({
-                type: "POST",
-                data: JSON.stringify(objeto),
-                url: "https://localhost:44321/api/venta/InsertarVenta?carritoID=" + localStorage.getItem("carritoID"),
-                dataType: "json",
-                success: async function(result) {
-                    if (result.status === 201) {
-                        window.location.href = await GetMercadoPago(result.data.saleId);
-                    }
-    
-                }
-            });
-        }
-     
+async function comprar() {
+    // let objeto = {
+    //     carroId: `${localStorage.getItem("carritoID")}`,
+    //     total: `${localStorage.getItem("valorcarrito")}`
+    // }
+    $.ajax({
+        type: "POST",
+        url: "https://localhost:44321/api/venta/InsertarVenta?carritoID=" + localStorage.getItem("carritoID"),
+        dataType: "json",
+        success: function (result) {
+            borrarCarritoCompleto();
+            localStorage.setItem("ventaID", result.ventaId);
+            GetMercadoPago(localStorage.getItem("valorcarrito"))
+                        .then((data) => {window.location.href = data})
+                        .catch((error) => window.location.href="/Error.html");
 
-    } else {
-        alert("seleccione un metodo de pago");
-    }
 
+        }
+    })
 }
 
 function iniciarSesion() {
     location.href = "/PantallasPrincipales/login.html";
 }
 
+const GetMercadoPago = async (price) => {
+    const result =  await $.ajax({
+        type: "GET",
+        url: `https://localhost:44321/api/venta/GetUrlPayment?price=${price}`,
+        dataType: "json"
+    });
 
-function Metodo(metodo,evento){
-    transferencia = false;
-    mercado_Pago  = false;
-     switch (metodo) {
-         case 'transferencia':
-             mercado_Pago  = false;
-             transferencia = true;
-             break;
-        case  'mercadoPago'  :
-             transferencia = false;
-             mercado_Pago  = true;
-             break;
-         default:
-             break;
-     }
+    return result;
+
 }
 
-const GetMercadoPago = async (saleId,price) => {
-        await $.ajax({
+function borrarCarritoCompleto()
+{
+    $.ajax({
         type: "GET",
-        url:`?Price=${price}&Description=MalditoHard&SaleId=${saleId}`,
+        url: "https://localhost:44310/api/Carrito/BorrarCarritoCompleto?carritoID=" + localStorage.getItem("carritoID"),
         dataType: "json",
-        success: function(results) {
-            if (results.status === 200) {
-                return results.data.initPoint;
-            } else {
-                return null;
-            }
-        }
-    });
+    })
 }
 
 
